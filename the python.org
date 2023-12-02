@@ -1,0 +1,518 @@
+* 变量和简单数据类型
+** 变量
+#+begin_src python
+  message = "hello python!"
+  print(message)
+#+end_src
+ + 变量可以随时赋予新的值
+ + 变量名只能包含字母、数字和下划线，且不能以数字开头
+** 字符串                                                           :引号内:
+#+begin_src python
+    print(message.title())
+    #.title(): make each words begins with captial letter.
+    # method, an action that python can perform on a piece of data.
+    # .upper()  全部大写
+    # .lower()  全部小写
+    frist_name = "ada"
+    last_name = "lace"
+    full_name = first_name + "·" + last_name
+    # 合并字符串： +
+    print(full_name.title())
+    #  fromart
+#+end_src
++ 换行， 空白，删除空白
+ #+begin_src python
+    print("\tpython")
+    # \t 制表符
+    print("python\n")
+    # \n 换行符
+
+    language = "python  " # 末尾有空白符号
+    print(language.rstrip())
+    # 暂时删除空白符号
+    # rstrip() 删除右空白
+    # lstrip() 删除左空白
+    # strip() 删除两端空白
+    language = language.rstrip()
+    # 永久删除变量中空白
+    # 单引号表达字符串时中间不应有‘号，否则会终止
+
+  #+end_src
+*** 数字                                                      :整数:浮点数:
+#+begin_src python
+  age = 23
+  message = "Happy " + str(age) + "rd Birthday! "
+  #显式表达整数作为字符串: str()
+  print(message)
+  #+end_src
+* 列表：[a,b,c] 特定顺序元素集合
+** 索引访问，自0 开始
+#+begin_src python
+  bycile = ['trek', 'cannodale', 'redline', 'specialized']
+  print(bycilep[0].title()) # produce "Trek"
+  print(bycile[-1].title()) # produce "Specilized" 
+#+end_src
+
+** 改变列表中的元素                                          :动态:列表状态:
+#+begin_src python
+  motorcycle = ['honda', 'yamha', 'suzuki']
+   # 改变列表元素值
+  motorcycle[0] = 'ducati'
+  # 在列表末尾添加元素
+  motorcycle.append('ducati')
+  # insert() : 任意位置添加元素
+  motorcycle.insert(0, 'ducati')
+  # 删除元素
+
+     # del 语句, 不再使用该列表元素值
+  del motorcycle[0]
+     # pop() 删除列表末尾的元素; 并将被删除元素付给新的变量
+  poped_motorcycle = motorcycle.pop()
+     # pop()删除任意位元素， 仍可使用该列表元素值
+  first_owned = motorcycle.pop(0)
+     # remove(): 根据值确定删除对象，仍可使用该对象
+  too_expensive = 'ducati'
+  motorcycle.remove(too_expensive)
+  print("\nA " + too_expensive .title() + "is too expensive for me.")
+#+end_src
+
+** 组织列表
+#+begin_src python
+    # sort() 依照字母顺序永久排序
+      # 依字母顺序反向排序
+    cars = ['bwm', 'audi', 'toyta', 'subara']
+
+    print(cars,sort(reserve=Ture))
+    # sorted() 临时排序
+    print(sorted(cars))
+  # reserve(): 逆转列表元素
+    cars.reserve()
+  # 函数len(): 获取列表长度
+    len(cars)
+#+end_src
+
+** 遍历列表
+#+begin_src python
+    magicians = ['alice', 'david','carolina']
+  for magician in magicians:
+      # for 语句末尾：说明自下一句开始执行循环。
+     # for循环只对for语句后缩进行生效。
+        print(magician)
+#+end_src
+
+** 数值列表
+#+begin_src python
+    # 函数range()：提供数值范围，可以指定步长
+    # 函数list()：提供列表
+    # 函数min(),max(),sum()用于处理数值列表
+    numbers = list(range(1,6))
+    print(numbers)
+    squares = []
+    for value in range(1,11,2):
+        squares.append(value**2)
+  print(squares)
+  # 列表解析:
+  squares = [value**2 for value in range(1,11,2)]
+  print(squares)
+  # 整除题: 列出30 以内可以被3整除的数字
+  squares = [value*3 for value in range(1,11)]
+  print(squares)
+#+end_src
+
+** 部分列表引用
+#+begin_src python
+  players = ['chares', 'martina', 'michael', 'flore', 'eli']
+  #切片
+  print(players[0:4])
+  #从头切片,切片时终止发生在终止索引之前，即终止索引的值不包括在所切的片内
+  print(players[:4])
+  #切片至尾部
+  print(players[2:])
+  # 从倒数位置切片
+  print(players[-3:])
+  # 遍历列表: 使用for循环
+  print("here are my first three players on my team")
+  for player in players[:3]:
+      print(player.title())
+  # 复制列表：注意区分列表与变量
+   my_foods = ['pizza', 'falafel', 'carrot cake']
+   friend_foods = my_foods[:] #复制列表
+  #friend_foods = my_food :复制变量, 即复制变量指向的列表
+   my_foods.append('cannoli')
+   friend_foods.append('ice cream')
+   print(my_foods)
+   print(friends_foods)
+#+end_src
+
+** 元组:()                                                    :不可变的列表:
+#+begin_src python
+ dimensions = (200,50)# 使用小括号定义元组
+    print("originan dimensions:")
+    for dimension in dimensions:
+        print(dimension)
+  # 对元组变量重新赋值
+  dimensions = (250, 100)
+  print("\nModified dimensions:")
+  for dimension in dimensions:
+      print(dimension)
+#+end_src
+
+* 条件语句
+
+** 条件测试                                      :Ture_or_false:布尔表达式:
+#+begin_src python
+  car = "Audi"
+  # 条件检查
+  car == "bwm"
+  car.lower() == "audi"
+
+
+  if
+  elif
+  else
+#+end_src
+
+* 字典                                                          :键值对:动态:
+
+** 修改字典                                           :访问:添加:删除:修改:
+字典的值：数字，字符串，列表，字典
+#+begin_src python
+  alien_0 = {'color' : 'green' , 'points' : 5}
+
+  #访问字典的值
+  new_points = alien_0['points']
+  print("you just earned" + str(new_points) + "points!")
+
+  #添加键值对
+  alien_0['x_position'] = 0
+  alien_0['y_position'] = 25
+      # 在空列表中添加
+      alien_1 = {}
+      alien_1['color'] = sliver
+      alien_1['points'] =5
+
+  #修改字典中的值
+  alien_0['color'] = 'yellow'
+
+  # 删除键值对：del语句
+  del alien_0['pionts'] 
+#+end_src
+
+** 遍历字典
+#+begin_src python
+    # 遍历键值对
+    user_0 = {
+        'username' : 'ali'
+        'first' : 'en'
+        'last' : 'fe'
+         }
+
+    for key, value in user_0.item():
+        #.item()方法默认可以声明任意两个变量分别用以储存键和值
+        print("\n Key:" + key)
+        print("Value:" + value)
+    #遍历键： 方法.keys(), 函数sorted()（排序）
+    #遍历值：.values()，函数set()（剔除重复项）
+
+#+end_src
+
+** 嵌套
+#+begin_src python
+
+      # 字典中嵌套列表
+      favorite_languages = {
+           'jen': ['python', 'ruby'],
+           'sarah': ['c'],
+           'edward': ['ruby', 'go'],
+           'phil': ['python', 'haskell'],
+            }
+      for name,languages in favorite_languages.item():
+          #将值对应的列表储存在变量中
+          print("\n" + name.title() + "'s favorite languages are:")
+          for language in languages:#通过循环语句逐次取出列表中的值
+              print("\t" + language.title())
+
+      # 字典嵌套字典
+      users = {
+          'aeinstein': {
+              'first': 'albert',
+                'last': 'einstein',
+                'location': 'princeton',
+                },
+          'mcurie': {
+              'first': 'marie',
+              'last': 'curie',
+              'location': 'paris',
+          }
+      }
+
+      for username,user_info in user.item():# 将代表字典的值储存在变量中
+          print("\nUsername:" + username)
+          Full_name = user_info['first'] + user_info['last']
+          #直接调用代表第一层字典的值的变量的值（第二层字典的值）
+          locarion = user_info['location']
+
+          print("\tFULL NAME:" + Full_name.title())
+          print("\tLOCATION:" + locarion.title())
+
+  #+end_src
+
+* WHILE 循环与输入交互
+
+#+begin_src python
+    prompt = "\nTell me something, and I will repeat it back to you."
+    prompt += "\nEnter 'quit' to end the program."
+
+    message = ""
+
+    while message != "quit":
+        message = input(prompt)
+
+        if message != "quit":
+            #这里嵌套了一个条件语句，利用内嵌的条件决定是否终结循环
+            print(message)
+#+end_src
+
+* 函数与类
+
+#+begin_src python
+class Dog():
+	    """类的说明"""
+  #__init__(self)是必须的，是类的本征初始量
+    def __init__(self,name,age):
+	self.name = name
+	self.age = age
+
+    def sit(self):
+	print(self.name.title() + "is now sitting.")
+
+    def roll_over(self):
+	print(self.name.title() + "rolled over!")
+  # 通过调用类并将之储存在一个变量中使之成为一个实例
+my_dog = Dog('whille',16)
+  # 调用定义在类中的变量（这里是类的属性）
+print(my_dog.name.title())
+  # 调用定义在类中的函数 
+my_dog.roll_over()
+
+#+end_src
+
+* 数据可视化                                               :matplotlib:pygal:
+** 随机漫步
+
+*** random walk class
+#+begin_src python
+from random import choice
+
+class RandomWalk():
+    """一个生成随机漫步数据的类"""
+
+    def __init__(self, num_points=5000):
+        """初始化随机漫步的属性"""
+        self.num_points = num_points
+
+       # 所有随机漫步都始于(0, 0)
+        self.x_values = [0]
+        self.y_values = [0]
+
+    def fill_walk(self):
+        """计算随机漫步包含的所有点"""
+        
+        # 不断漫步，直到列表达到指定的长度
+        while len(self.x_values) < self.num_points:
+            # 决定前进方向以及沿这个方向前进的距离
+            x_direction = choice([1, -1])
+            x_distance = choice([0, 1, 2, 3, 4])
+            x_step = x_direction * x_distance
+     
+            y_direction = choice([1, -1])
+            y_distance = choice([0, 1, 2, 3, 4])
+            y_step = y_direction * y_distance
+            # 拒绝原地踏步
+            if x_step == 0 and y_step == 0:
+                continue
+            
+            # 计算下一个点的x和y值
+            next_x = self.x_values[-1] + x_step
+            next_y = self.y_values[-1] + y_step
+            
+            self.x_values.append(next_x)
+            self.y_values.append(next_y)
+
+#+end_src
+
+*** Random Walk Visiual
+#+begin_src python
+import matplotlib.pyplot as pt
+
+from random_walk import RandomWalk
+
+while True:
+    rw = RandomWalk(100000)
+    rw.fill_walk()
+
+    #设置绘图窗口
+    pt.figure(figsize=(20,12))
+    #隐藏坐标轴(过时的写法)
+    #pt.axes().xaxis().set_visible(False)
+    #pt.axes().set_visible(False)
+
+
+    point_numbers = list(range(rw.num_points))
+
+    pt.scatter(rw.x_values, rw.y_values, c = point_numbers, cmap = pt.cm.Blues,
+                 s=15)
+    #突出起点和终点
+    pt.scatter(0,0, c='green', edgecolor='none',s=100)
+    pt.scatter(rw.x_values[-1],rw.y_values[-1],c='red',edgecolor='none',
+               s=100)
+
+    pt.axis('off')
+    pt.show()
+
+    keep_running = input("Make another walk?(y/n)")
+    if keep_running == 'n':
+        break
+#+end_src
+
+** die
+
+*** class die
+#+begin_verse python
+from random import randint
+
+class Die():
+    """表示一颗骰子的类"""
+
+    def __init__(self, num_sides=6):
+        """默认骰子有六面"""
+        self.num_sides = num_sides
+
+    def roll(self):
+        """返回一个介于1到骰子面数间的值"""
+        return randint(1, self.num_sides)
+#+end_verse
+
+*** die visible
+
+#+begin_src python
+  from die import Die
+
+  import pygal
+
+    # D6实例
+  die = Die()
+
+	  #掷骰子，将结果存在列表中
+
+  results = []
+
+  for roll_num in range(1000):
+      result = str(die.roll())
+      results.append(result)
+  #分析数值
+  frequencies = []
+  for value in range(1,die.num_sides+1):
+      frequency = results.count(str(value))
+      frequencies.append(frequency)
+
+  print(frequencies)
+  #直方图
+  hist = pygal.Bar()
+  hist.title = "Results of rooling one D6 1000 times"
+  hist.x_lables = ['1','2','3','4','5','6']
+  hist.x_title = "Results"
+  hist.y_title = "Frequency of Result"
+  hist.add('D6',frequencies)
+  hist.render_to_file('die_visual.svg')
+#+end_src
+
+** 气候CSV
+
+#+begin_src python
+  import csv
+
+  from datetime import datetime
+
+  from matplotlib import pyplot as plt
+
+
+  filename = 'sitka_weather_07-2014.csv'
+  with open(filename) as f:
+      reader = csv.reader(f)
+      header_row = next(reader)
+
+      dates,highs =[],[]
+      for row in reader:
+	  current_date = datetime.strptime(row[0],
+					   "%Y-%m-%d")
+	  dates.append(current_date)
+	  highs.append(int(row[1]))
+
+      #for index, colum_header in enumerate(header_row):
+	  #enumerate()将header_row 整理成具有索引的形式
+      #    print(index, colum_header)
+
+      #绘图及图形格式
+  fig = plt.figure(dpi=128, figsize=(20,12))
+  plt.plot(dates,highs,c = 'red')
+
+  plt.title("Daily high temperature, July 2014", fontsize=24)
+  plt.xlabel('',fontsize=16)
+  fig.autofmt_xdate()
+  plt.ylabel("Temperature(F)", fontsize=16)
+  plt.tick_params(axis='both', which='major', labelsize=16)
+
+  plt.show()
+
+
+#+end_src
+
+** 人口                                                                :json:
+
+#+begin_src python
+import json
+import pygal
+import pygal_maps_world.maps
+from pygal.style import LightColorizedStyle as LCS, RotateStyle as RS
+
+from pygal_maps_world.i18n import COUNTRIES
+
+def get_country_code(countryname):
+    for code, name in COUNTRIES.items():
+        if name == countryname:
+            return code
+    return None
+
+filename = "population_data.json"
+with open(filename) as f:
+    pop_data = json.load(f)
+   
+cc_populations = {}
+for pop_dict in pop_data:
+    if pop_dict['Year'] == '2010':
+        country_name = pop_dict['Country Name']
+        population = int(float(pop_dict['Value']))
+        code = get_country_code(country_name)
+        if code:
+            cc_populations[code] = population
+
+cc_pops_1, cc_pops_2, cc_pops_3 = {}, {}, {}
+for cc, pop in cc_populations.items():
+    if pop < 1000000:
+        cc_pops_1[cc] = pop
+    elif pop < 100000000:
+        cc_pops_2[cc] = pop
+    else:
+        cc_pops_3[cc] = pop
+
+wm = pygal_maps_world.maps.World()
+wm_style = RS('#336699',base_style=LCS)
+wm.title = "World Poplation in 2010, by country"
+wm.add('0-1m', cc_pops_1)
+wm.add('1m-100m', cc_pops_2)
+wm.add('>100m', cc_pops_3)
+
+wm.render_to_file('World Poplation.svg')
+
+#+end_src

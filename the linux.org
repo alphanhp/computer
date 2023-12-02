@@ -1,0 +1,791 @@
+* Operating System Works
+
+** Levels And Layers of abstraction in linux System
+Classication of a component according to where that component sits
+between user and the hardware.
+
+*** Layers
++ User Processes: GUI, Servers, Shell.
++ Linux kernel: System Calls, Processes Management, Memory Management,
+  Devices Drivers.
++ Hardware: Processor(CPU), Main Memory(RAM), Disks, Network Ports.
+
+*** Mode: kernel mode and user mode
++ kernel mode: Unrestricted to acess to the processor and man memory.
++ User mode: Restricts acess to subset of memory and safe CPU
+  operation.
+
+** Hardware: Understanding main Memory                             :0:1:bits:
++ STATE: A particular arrangement of bits.
+
+** Kernel:
+Split Memory into many subdivisons, and maintain certain state
+information about these subdivisons at all times.
+
++ Process Management: context switch.
++ Memory Management: Split and maintain subdivisions for kernel's
+  and each process's privite memory need, and private memory means
+  one process isn't allowed to acess the private memory of another
+  process.
++ Devices drivers and Management: Typically accessible only in kernel
+  mode, and different type of device have different interface to
+  program.
++ System Calls and Support: System Call perform specific tasks that a
+  user process alone cannot do well or at all. Typically to start up
+  process with two system call: ~fork()~, ~exec()~.
+
+** User Space: Main memory kernel allocates for user process
++ Generally speaking, redimentaty structure for components are
+  components those more close to user, and components which perform
+  more complecatied tasks usually in high level of all components.
++ Users processes make up the environment that users derictly interact
+  with, the kernel manges processes and hardware.
+
+* Using the shell
+
+** Virtual Consoles: C+M+ F2, C+M+F1, C+M+F3
+
+** Basuc Commands
+
+*** 'cat' and Standard Input(=stdin=) and Standard Output(=stdout=)
++ Unix processes use 'I/O steams' to read and write data.
++ The source of an input stream can be a file, a device, a terminal, or
+  even the output stream grom another processes.
++ "cat" read form the "standard input" stream provide by Linux kernel
+  rather than a stream connected to a file.
++ "C-d" on an empty line stops the current standard input from current
+  terminal (and often terminate a program).
++ "C-c" terminates a program regardless of its input or output.
++ Standard output was given by Linux kernel, where a process can wirte
+  it output.
+
+*** Get Help
++ manual page(man)
+  #+begin_src bash
+    man -k keyword # Search a manual page by keyword
+    man ping(8) #refers to the 8th section of ping manul
+    man 5 passwd # file description section of passwd 
+  #+end_src
++ "info": textinfo doc, more complex and goes further than manual page.
++ ~/usr/share/doc~: some package perfer to dump their availble doicument
+  in this directory, regardless for man and info page.
+
+*** Shell Input and Output
+#+begin_src bash
+  command > file  # send the output of a command to a file, if file
+		  # exits,the shell will erases the original file
+	          # first
+  command >> file # append the output to a file.
+  ls \fffff 2> e  # the number '2' specifies the "stream ID". '1' is
+  	          # standard output, and "2" is standard errors.
+
+  ls \fffffffff 2>&1 # send standard error to where standard output
+                     #  is.
+  
+#+end_src
+
+*** Symbolic Links
+#+begin_src bash
+  ln -s target linkname #Don't forget the -s argument, otherwise it
+                        #will produce a hard link
+#+end_src
+
+- symbolic Links are files that point to another file or directory.
+- Simply filenames that point to other name.
+- Hard Link: Giving an additional filename to a single file. And new
+  file name has status of the old one.
+
+** Locating Commands
+#+begin_src bash
+  $ echo $PATH # show common default Path
+  $ type(which)  bash # determine the location of a particular command
+  $ locate cmd # find a command which is not in PATH variable
+#+end_src
+
+** Archiving and compressing Files
+#+begin_src bash
+  gzip file # compress
+  gunzip file # uncompress
+
+  tar cvf archive.tar file1 file2 ...
+  # "c" creat mode
+  # "v" verbose diagnotic output
+  # "f" file option. the next argument  after f flag must be archive
+  #     file for tar to create
+
+  tar txvf archive.tar
+  <<bock
+	  "t": table of contents mode. Verifier the archive's basic
+    integrity and prints the name of all files inside.
+	  "x" puts tar into Extract(unpack) mode.
+	  "p":preserve permissions. Default in superuser privatility.
+    bock
+  zcat file.tar.gz | tar xvf - # -(dash) here means stdout
+  tar ztvf file.tar.gz
+  <<block
+    zcat here is the same as 'gunzip -dc'. d option decompresses
+  and -c option sends the results to standard output.
+    'z' option of tar automatically invoke gzip on the archive.
+    The last command works both for extracting an archive, and
+  creating one.
+  block
+  
+#+end_src
+
+** Recalling Command (Using Command History)
+  - vim command to editing shell command lines: add 
+#+begin_src bash
+  set -o vi
+#+end_src
+    to *.bashrc* file.
+
+  - recalling history
+#+begin_src bash
+  $ history 8 # 8 item of recent history
+  $ !n
+  $ !! # run previous command
+  $ !?strng # run recent cmd contains string.
+  $ !?dat? # example
+  $ fc n(um) # recall NO.n cmd in history and open in text editor
+  $ fc 100 105  # a range of number of cmd in history and open in editor   
+#+end_src
+
+** Connecting &. Expanding Commands                          :Metacharaters:
++ piping between cmd(|): connect the output from one command to the
+  input of another command.
+     #+begin_src bash
+      $ cat /etc/passwd | sort | less
+     <<block
+       lists the contents of /ect/.. file and pipes the output to sort
+       cmd sorting them alphabetically and pipoes the output to
+       the less command to page thopugh the output.
+       block
+      $ gunzip < /usr/share/man /man1 /grep.1.gz | nroff -c -man | less
+#+end_src
++ sequential cmd: ; 
+  #+begin_src bash
+    $ date ; troff -me verylagedoc | lp ; date
+  #+end_src
++ background cmds: &
+  #+begin_src bash
+    troff -me verylarge | lp &
+  #+end_src
++ expanding commands
+  #+begin_src sh
+    $ nano $(find /home | grep xyzzy)
+  #+end_src
++ arithmetic expressions
+  #+begin_src sh
+    $ echo "I'm $[2019-1957] years old."
+    $ echo "there are $(ls | wc -w) files in this directory."
+  #+end_src
+
+**  Creating Shell Environment 
+
+*** Configuring Shell
+- /etc/bash.bashrc, /etc/profile
+- ~/.bashrc, ~/.profile 
+
+* Filesystem
+** Hierarchy Organization
+   - root dirctory represented by a single slash(/)
+   - /dev: device
+   - /etc: Adminstrative configuration files.
+   - /lib : shared libraries needed by applivations iins /bin and /sbin
+     to boot the system.
+     - /opt: dirctory structture available to store add-on application
+       software.
+       - /tmp: temporary files used by applications.
+   - /usr: doc, files and commads are not needed during boot proess.
+   - /var: dirctories of data used by various applicartions. changes
+     often.
+  
+** Basic Filesystem Commads
+   + /cd, pwd, mkdir,ls/
+   + ~chmod~: changes the permission on a file or diretory.
+   + /~/: home directory.
+
+*** Using Metacharacters And Operators
+
++ File-matching:
+  + *: any number of characters.
+  + ?: certain number of character.
+  + [...]: any charaters between the brackets, Include
+    hyphen-separated range of leters nymbers.
+    
+#+begin_src bash
+  ls [abw]*
+  #any file beginning with a, b, w.
+  ls [a-g]*[ne]
+  # any files beginning with a letter from a though g are matched
+  #and end wuth n or e 
+#+end_src
++ File-redirction:
+  #+begin_src sh
+    mail root < ~/.bashrc
+    <<BLOCK
+       the content of .bashrc file is sent in a mail message to root user
+      '<' direct the content of a file to the command.
+      BLOCK
+    man chmod | col -b >/tmp/chmod
+    <<BLOCK
+    format the chmod man page, remove extra back space(col -b),
+    send the outpu to the file /tmp/chmod'  >' derict the output to the file
+    BLOCK
+    echo “I finished the project on $(date).” >> ~/projects
+    <<BLOCK
+      the message being added to user's project file.
+      '>>' direct the output of a command to a file, add
+       the output to the end of the existing file.
+    BLOCK
+    $ mail root cnegus rjones bdecker <<thetext
+    > i want to tell everyone that there will be a metting
+    > in conference room B. Everyone should attend.
+    > --james
+    >
+            thetext
+    <<BLOCK
+    here text, "thetext" repeat in the end of the text.
+    BLOCK
+
+  #+end_src
++ Usingbrace expansion charaters
+  #+begin_src bash
+    touch memo{1,2,3,4,5}
+    touch {john,bill,sally}-{breakfast,lunch,dinner}
+    rm {john,bill,sally}-{breakfast,lunch,dinner}
+    touch{a..f}-{1..5}
+  #+end_src
+
+*** Listing Files And Directories
+#+begin_src sh
+  ls -F 
+  apple banana docs/ grape grapefruit pointer_to_apple@ script.sh* watermelon
+  <<BLOCK
+          /:directories
+          ,*: executable files
+          @: symbolic links
+          BLOCK
+  ls -ld # Information of curernt directories
+  ls -F # append file_type indicators
+#+end_src
+
+*** Permissoneion
+#+begin_src bash
+  chmod -R a(ugo)-+rwx  $HOME/my # recursive
+  chmod 755 file # r=4,w=2 x=1
+
+#+end_src
+
+* Device
+
+** Device File Creation
+The most often is that device files are created by =devtmpfs= and
+=udev=.
+Here are two kind of method to creates =device files= manually.
+- ~mknod~ command creates one device, and device name as well as its
+  major number and minor number are required.
+  #+begin_src bash
+    mknod /dev/sda1 b 8 1
+    # block deviece with major number 8 and minor number 1
+    # c or p for character and pipes device respectively.
+  #+end_src
+
+- =MAKEDEV= program in /dev creates groups of devices.
+
+** =Udev=:
+- Send notifications to user space processes when detected
+new devices(such as USB Flash drive).
+- Examine new device's character, create device file, and then perform
+  device initialization.
+- =udevd= started as systemd-udevd while system startup, it's part of
+  stratup mechanism.
+
+*** =devtmpfs=
+Creates device files and as necessary, and notifies udevd that a new
+device is available.
+#+begin_quote
+  While receiving the signal of new device is available, udevd doesn't
+create device file, but
+- performing initialization of device.
+- Setting permissions of new device.
+- notifying other processes that new device is available.
+- creating numbers of symbolic links in /dev to further identify
+  devices.(such as in directory /dev/disk/by-id)
+  - Links was named by interface type, manufacturer and model
+    information, serial numbers, partition.(disk devices)
+#+end_quote
+
+*** =uevent= and =rules=
+- The kernel send =udev= notifications event(uevent) though internal
+  network links. Udevd load all of attributes in uevent. 
+- udevd parses rules which were defined in /lib/udev/rules.d or
+  /etc/udev/rules.d( the last one will override the rules in first
+  one).
+- udev will continurouslly read rules file for more applicable rules,
+  after the first time read it along with executing its required
+  actions(if exists).
+- While reading rules, it maybe skip over parts of or even whole files
+  if there exists directives(such as GOTO) which asked to do.
+- An example of rules require udev to do is the symbolic links created
+  by udev, but defined by rules in rules file(such as in
+  /lib/udev/rules.d/60-presistent-storage.rules).
+
+*** =udevadm=                                          :Adminstration_tool:
+
+1) Features
+   1. Reload rules and tigger events.
+   2. Search for and explore system devices.
+   3. Monitor Uevents as udevd recevies these from kernel.
+2) Attributes: Udev used and gennerated in conjunction with rules
+   #+begin_src bash
+     udevadm info --query=all --name=/dev/sda
+   #+end_src
+
+   #+CAPTION: Udevadm
+   #+NAME: fig:udevadm_output
+   [[./the linux/usdvadm_output.png]]
+
+   1. P: Sysfs device path
+   2. N: device node
+   3. S: Symbolic Link to device node that udevd placed in /dev
+      accrodding to rules
+   4. E: Additional device informations extracted in udevd rules.
+3) Device monitor
+   #+begin_src bash
+    udevadm monitor
+    -----------------
+    udevadm monitor --kernel(udev,property) --subsystem-match=scsi
+    udisksd #Daemon 
+    <<BB
+     listens for events in order to automativally attach disks
+     and to notyify other processes that disk are available
+     BB
+   #+end_src
+
+
+*** SCSI and linux kernel
+**** Host adapter
+#+CAPTION: Host adapter linked with a chain of device over SCSI bus
+#+NAME: fig:host_adapter
+[[./the linux/host_adapter.png]]
+- SATA: also SCSI device, but communicate through a transdlation layer
+  in the libata libary, and some SATA controllers(RAID controllers)
+  perform this translation in hardware.
+#+CAPTION: LSSCSI INFO
+#+NAME: fig:lsscsi
+[[./the linux/lsscsi.png]]
+** Mount Filesystem
+*** Filesystem Mount options                           :general:fs_specific: 
+To activate a filesystem option, use the -o swith followed by option.
+#+begin_src bash
+  mount -o remount,rw
+  << bk
+    remounts a filesystem already mounted as read-only in read-writes
+  mode.
+          bk
+#+end_src
+1. Short general options
+   -r mounts the filesystem in read-only mode.
+   -n not mount database in update system runtime.
+   -t specifies the filesystem type.
+2. long options
+   #+begin_src bash
+     mount -t vfat /dev/sde1 /dos -o ro,uid=1000
+     <<cc
+         ro: read-only
+         uid: treat all files on filesystem as if userid 1000 is the
+     owner.
+         exec, noexec: Enable ot disable execution of programs on
+     filesystem.
+         suid,nosuid: enable or disable setuid program.
+         rw: mount the filesystem in read-write mode.    
+
+                                                                          cc
+   #+end_src
+*** Remount filesystem
+#+begin_src bsash
+  mount -n -o remount /
+#+end_src
+*** Filesystem table: ~_/etc/fatable_~
+
+* Working With Text FIles
+
+** Find Files
+
+*** /Locate/: Find Files' Name.                   :faster:rely_on_database:
+#+begin_src bash
+  locate      #filesname and string contained by path.
+  locate -i  #file name are found regardless of case.
+#+end_src
+
+*** Searchn-g For Files With /Find/                   :based_on_attributes:
+#+begin_src bash
+  $ find /etc #search from a particular piont
+  #find each object with a long listing, and redirect standard errors to
+  #/dev/null
+
+  $ find $HOME -ls 2> /dev/null
+
+  # find files by name
+  $ find /ect -name passwd
+  # more flexible. and case-insensitive
+  $ find /etc -iname '*name*'
+
+  # find files by size
+  # du: see each files' size
+  $ find /bigdata -size +500M -size 5G -exec du -sh {}\;
+
+
+  # find files by owner(-user ) or group(-group)
+  find  /home \(  -user chirs -or -user joe \) -ls
+  find /var/spool -not -user root -ls # not owned by root
+
+  # find files by permission(-perm option)
+  find /usr -perm -222 -type d # -type d: match only directoy
+  # - in front: all three number must be matched
+  find . -perm -002 -type f -ls
+  # / in front: any of the three numbers can be  matched
+  find . -perm /222 -type f -ls
+
+  #find files by date and time
+  <<block
+  -atime,  -ctime, -mtime, -amin, -cmin, -mmin
+  accessed, changed, metadata changed
+  -num: from current time to that  number of minutes or days ago
+  +num: from the number of minutes or days ago
+                                                           block
+  find /ect -mmin -60
+  find /var/ftp -atime +300
+
+  # Using ‘not’, 'or', 'and'
+  #either...or..
+  find /var/allusers \( -user joe -O -user chirs \) -ls
+  #only but not assigned to group
+  find /var/all -user joe -not -group joe -ls
+  #more requirements
+  find /var/all/ -user joe -and -size +1M -ls
+
+  # Find and execting: -exec, -ok option
+  <<block
+         -exec :executed on every file without query
+         -ok: query whether run command at any matched file
+         {} indicates where the command to read
+          \; :end of the line 
+               block
+  find [option] -exec command{} \;
+  find [option] -ok command{} \;
+  # du: list the size of each file 
+  $ find /usr/share -size +4M -exec du {} \; | sort -nr
+  $ find /var/allusers/ -user joe -ok mv {} /tmp/joe/ \;
+#+end_src
+
+*** Searching In Files With /Grep/                           :certain_text:
+Searching for files contains a cerntain term. And the command is
+case-sensive.
+#+begin_src bash
+  grep network /etc/services
+  gerp -i network /etc/services #case-insensitive
+  #Don't contains selected text string
+  grep -vi tcp /etc/services
+  #recursive and without showingthe actual lines of text
+  grep -rli peer /usr/share/doc/
+  grep -ri --color root /etc/systemd/
+
+  ip addr show | grep inet
+#+end_src
+
+* Managing Running Processes
+
+** Processes:
++ Identified with PID. the raw information stored in /proc filesystem.
++ /ps/ and /top/ command list processes.
+#+begin_src bash
+  ps u # -u: asking username be shown.
+  ps aux
+  # customize to dispaly every running process by seleced clomns
+  ps -eo pid,user,uid,group,gid,vsz,rss,comm | less
+  ps -eo pid,user,uid,group,vsz,rss,comm --sort=-vsz | head
+
+
+#+end_src
++ /top/ command
+  + *h*: help option
+  + *M*: sort by memory
+  + *P*: sort by CPU
+  + *1*: toggle showing CPU usage of all CPUs.
+  + *R*: reverse sort
+  + *u*: enter a username to display processes.
+
+** Manage Background and Foreground Processes
++ /&, at, C-Z, fg, bg, C-L/
+   #+begin_src bash
+     $ find /usr> /tmp/allusrfiles &
+     $ jobs #check background running command.
+     [1] Stopped (tty outout)vi /tmp/myfiles  
+     [2] Running  find /usr -print> /tmp/allusrfiles
+     [3]- Running nroff -man /usr/man3*> /tmp/man3 &
+     [4]+ Stopped nroff -man /isr/man4/* >/tmp/man4
+
+     $ fg %1
+     # regers to the most recent command put into the background.
+     # %?string refers to a job where the command line contains a string(any
+     #  point)
+     # %-- refers to the job stooped before the one most recently stopped.
+
+     $ bg %5
+     #+end_src
+
+** Kill Process
+#+begin_src sh
+  # kill by PID
+  # 10432: PID
+  kill 10432
+  Kill -15 10432 # 15= SIGTERM
+  kill -SIGKILL 10432 #SIGKILL =9
+  kill -1 1322 #SIGUP
+  kill -HUP 1322 #SIGUP
+
+  # KILLALL: kill by name
+  $ killall -9 testname
+
+#+end_src
+
+** SET processor  Priority with nice and renice.            :negative20:19:
++ Lower Nice value, More acess to CPU.
++ Regular user can only set the positive number of nice value, and
+  just to increase the number, and just with his own processes.
+  #+begin_src bash
+    $ sudo nice -n +5 updaredb &
+    $ renice -n -5 20021 # PID
+  #+end_src
+
+** Limiting Process by cgroups
+1. Take over a mount of processes which consume resources of system.
+2. creat cgroups in /etc/cgconfig.conf
+3. setting up limits for particular user or groups: /etc/cgrules.conf
+4. /cgcreat/ command create cgroups adding to /sys/fs/cgroup.
+
+* Shell Script
+
+** Executing and Debugging shell scripts
+1. Use filename as an argument to the shell.
+2. Writing the Interpreter place(#!) and execute bit in shell script. And
+   reffer it in any path that you need.
+
+** Shell variables
++ Store informations with variable so that it could be reuse in any
+  place that you need.
++ variables' name is case sensitive.
+#+begin_src bash
+  MACHIE=`uname -n`
+  MYDATE=$(date)
+  NUM_FILES=$(/bin/ls | wc -l)
+  # escape Special Shell Character: $ ` * !
+  echo '$HOME * `date`'
+  $HOME `date`
+  echo "$HOME * `date`"
+  /home/chris files tue jan 12 12:21:23 edt 2020
+#+end_src
+- Position Parameters
+  #+begin_src bash
+    <<bk
+    $0: the full path of scripts.
+    $#: the number of position paramemeter.
+    $@: refers all parameters.
+    $?: the exits status of the last command executes.
+    bk
+
+    # reading in parameters: prompt the user for storing some
+    # informations and use it later in scroipts.
+    #!/bin/bash
+    read -p "type in an adjective, noun, and verb(past tese):" adj1 noun1 verb1
+    echo "he sighed and $verb1 to the elixir, then he ate the $adj1 $noun1."
+
+    # Parameter expansion in bash
+    ${VAR:-value}
+    ${VAR#pattern}
+
+    MYFILES=/home/digby/myfiles.txt
+    FILE=${MYFILES##*/}
+    DIR=${MYFILES%%/*}
+    NAME=${FILE%.*}
+    EXTENSION=${FILE##*.}
+
+    # Arithmetic in Shell Scripts
+    BIGNUM=1024
+    let RESULT=$BIGNUM/16
+    RESULT=`expr $BIGNUM /16`
+    RESULT=`echo "$BIGNUM /16" | bc`
+#+end_src
+
+**  PROGRAMMING CONSTRUCTS
+  #+begin_src bash
+      ## If... then...
+    if [ $VAR -eq 1 ]; then
+        echo "The variable is 1"
+        fi # indicates that the if statement is complete.
+    if [ $STRING = "Friday"] ; then
+        echo "whooooo, Friday"
+        else
+            echo "will Friday ever get here"
+            fi
+
+    if [ "$STRING" != "Monday" ] ; then
+        echo "At least it's not Monday"
+        fi
+
+    filename="$HOME"
+    if [ -f "$filename" ] ; then
+        echo "$filename is a regular file"
+        elif  [ -d "$filename" ] ; rhen
+              echo "$filename is a directory"
+              else
+                  echo "I have no idea what $filename is"
+    fi
+
+    # { test } || action: if not fo acrion
+    [ -d "$DIRNAME"] || mkdir "$DIRNAME"
+    #[ test ] && {action}
+    [ $# -ge 3] && echo "There aer at least 3 command line arguments"
+    [ -e $dirname ] && echo "$dirmane already exists" || mkdir $dirname
+
+    # The "case" command
+    case "Var" in
+        Resulst1)
+            {body};;
+        Result2)
+            {body};;
+        ,*)
+            {body};;
+        esac
+    case `date+%a` in
+        "Mon")
+            BACKUP=/home/myproject/data0
+            Type=/dev/rft0
+            ;;
+        "Tue" | "Thu")
+            BACKUP=/home/myproject/data2
+            TAPE=/dev/rft2
+            ;;
+        ,*)
+
+          BACKUP="none"
+          TAPE=/dev/null
+          ;;
+        esac
+
+    # "for... do"
+    for VAR in List
+               do
+                   { body }
+                   done
+    LIMIT=10
+    for ((a=1; a<=LIMIT ; a++)); do
+        echo "$a"
+        done
+
+    # "while... do..." and "until... do..."
+    N=0
+    while [ $N -lt 10 ] ; do
+        echo -n $N
+        let N=$N+1
+        done
+    N=0
+    until [ $N -ge 10] ; do
+        echo -n $N
+        let N=$N+1
+        done
+  #+end_src
+
+** TEXT MANIPULATION PROGRAMS
+#+begin_src bash
+  # cut
+  grep /home /etc/passwd | cut -d':' -f6 -
+  # Translate or delete: tr
+  for file in * ; do
+      f=`echo $file | tr [:balnk:] [_]`
+      [ "$file" = "$f"] || mv -i --"$file" "$f"
+      done
+
+  # the strean editor (sed)
+  # search 'home' and print the line which contains 'home'
+  $ sed -n '/home/p' /etc/passwd
+  # global replace
+  sed 's/Mac/Linux/g' somefile.tex> fixed_file.tex
+  # same as
+  cat somefile.tex | sed 's/Mac/Linux/g'> fixed_file.tex
+  # delete extra blank spaces(/*$)
+  sed 's/*$//' some.tex> Fixed_file.tex
+  #+end_src
+
+** SIMPLE SHELL SCRIPTS
+
+*** TELEPHONE LIST
+#+begin_src bash
+  #!/bin/bash
+  #(@)/ph
+  PHONELIST=~/.phone.txt
+
+  if [ $# -lt 1 ] ; then
+      echo "whose phone number did you what"
+      exit 1
+      fi
+
+  if [ $1 = "new" ]  ; then
+      shift
+      echo $*>>$PHONELIST
+      echo $* added to database
+      exit 0
+      fi
+
+  if [ ! -s $PHONELIST ]; then
+      echo "no name is the phone list yet !"
+      exit 1
+      else
+          grep -i -q "$*" $PHONELIST
+          if [ $? -ne 0 ]  ; then
+              echo "Sorry, the name was found in the phone list "
+              exit 1
+              else
+                  grep -i "$*" $PHONELIST
+                  fi
+          fi
+  exit 0
+#+end_src
+
+*** BACKUP
+#+begin_src bash
+  #!/bin/bash
+  #(@)/my_backup
+  TAPE=/dev/rft0
+
+  mt $TAPE rew
+  HOMES=`grep /home/etc/passwd | cut -f6 -d':' `
+
+  tar cvf $TAPE $HOMES
+
+  mt $TAPE rewffl
+
+#+end_src
+
+* SYSTEM Administor
+
+** COCKPIT TOOL WITH GUI INTERFACE
+
+** CONFIGURE SUDOERS SYSTEM: */etc/sudoers*
+#+begin_src bash
+  /usr/sbin/visudo
+  joe ALL=(ALL) ALL
+  (joe ALL=(ALL) NOPASSWD:ALL)
+#+end_src
+
+** Administrative Commands, Configuration Files, and Log Files
+
+*** Administrative commands                                :FOR_ROOT_USERS: 
++ The PATH only for root users:
+  + /sbin: Boot systems, include check files system(fsck) and Turining
+    on swap devices(swapon).
+  + /usr/sbin: Manage user accounts, check processes, commands runing
+  as daemon prosesses.
+

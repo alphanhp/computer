@@ -1,0 +1,76 @@
+* Introduction 
+** Turing model
+- Data processors: Black box
+- Programmable data processors
+  Program: A set of instructions telling the computer what to do.
+- Universal turing mechine
+  Provide approriciate program with any commputer, the computer can do
+  any computation.
+** Von Neumann model: Memory to store data and program
+- Four subsystem: memory, arithmetic logic unit, control unit, I/O
+ Control unit: controls the operations of the memory, ALU I/O.
+- the stored program concept: Binary patterns in memory.
+- Program: Made of a squential finite number of instructions.
+** Computer components: Hardware, Data, Software.
+- Hardware: Four components under Von Neumann Model.
+- Data: Computer is a data processing mechine.
+  - storing data: eletric signals' presense and absence presentated by
+    binary patterns
+  - organizing data: units more than binary pattern.
+- Software:
+  - Program storing: For reusablity.
+  - Algorithms: How to consist instructions to be a approriciate
+    program for sloving different problem.
+  - Languages: Symbols and words to repersent binary.
+  - Software Engineering: Structured programs.
+  - operating systems: A serials of common used instructions works as
+    manager to facilitate access to the computer's componets by
+    programs.
+** Computer science as DIscipline: Systems and applications     :two_areas:
+* Data Representation and Operation 
+** Number Systems                                       :Symbols_represent:
+*** Positional Number Systems
+\begin{multline}
+(S_{k}S_{k-1}...S_{2}S_{1}S_{0}.S_{-1}S_{-2}...S_{-L})_{n}=\\
+S_{k}*n^{k}+S_{k-1}*n^{k-1}+...+S_{0}*n^{0}+S_{-1}*n^{-1}+...+S_{-L}*n^{-L}  
+\end{multline} 
+Position a Symbol occupies in the number determines the value.
+- Decimal System
+- Binary Digits(bits)
+- Hexadecimal System(base 16)
+- Octal System(base 8)
+- Conversion
+*** Noposition Number Systems:Roman's number
+** Data Storage 
+*** Data Types: Number, Text, Audio, Image, Video.
+- Engineering program: processes number with arithmetic logic operations.
+- Word Processing program: processes text as some kind of information.
+**** Data inside computer
+- Bit Pattern: A squence of binary digits number. 
+  =byte=: eight digits binary number.
+  =Word=: a longer bit pattern.
+**** Storing number                    :Signal_of_Number:decimal_point:dot:
+1. Integers
+   1) Fixed-point representation
+   2) Unsigned Representation
+      no negative number, theoretical range could be between 0 to
+      positive infinity, but actually there is a maximum unsigned
+      integer.
+      - ~Overflow~: Drops the leftmost bit and keeps the rightside bits
+        to fit the maximum bits.
+      - Applications: Counter, Addressing, other types of data rather
+        than number, which can be transformed into unsigned number.
+   3) Sign&Magnitude Representation
+      The available range for unsigned intergers is devide into two
+      equal subranges, the first half ranges represents positive
+      intergers, and the last range represents negative intergers.
+      The leftmost bit is dedicate to store the sign which represents
+      positive(+) or negative(-).
+      * ~Overflow~ in Sign&Magnitude represent:
+        the positive number will change the bit which represent
+        positive or negative(if not large than two times as the subrange
+        for positive intergers)
+        the negative number will drops the leftmost bits, and may
+        change the sign.
+      * Applications: Part of real number, quantize an analog sign.
+   4) Two's complement representation
